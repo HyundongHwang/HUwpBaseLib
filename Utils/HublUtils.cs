@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,8 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Security.Cryptography;
+using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.System.Profile;
 using Windows.Web.Syndication;
 
 namespace HUwpBaseLib.Utils
@@ -88,6 +91,60 @@ namespace HUwpBaseLib.Utils
             var trimedPath = addend.TrimStart(new[] { '/' });
             var combinedUrl = $"{uri.Scheme}://{uri.Host}/{trimedPath}";
             return combinedUrl;
+        }
+
+        public static string GetComputerInfo()
+        {
+            var eas = new EasClientDeviceInformation();
+            var ai = AnalyticsInfo.VersionInfo;
+            var package = Package.Current;
+
+
+
+            var hwId = eas.Id.ToString();
+
+
+
+
+            var hwManufacturer = eas.SystemManufacturer;
+            var hwProductName = eas.SystemProductName;
+            var hwSku = eas.SystemSku;
+
+
+
+
+            var osCat = ai.DeviceFamily;
+
+            var sv = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
+            var v = ulong.Parse(sv);
+            var v1 = (v & 0xFFFF000000000000L) >> 48;
+            var v2 = (v & 0x0000FFFF00000000L) >> 32;
+            var v3 = (v & 0x00000000FFFF0000L) >> 16;
+            var v4 = (v & 0x000000000000FFFFL);
+            var osVersion = $"{v1}.{v2}.{v3}.{v4}";
+
+            var osArchitecture = package.Id.Architecture.ToString();
+
+
+
+            var appName = package.DisplayName;
+            var appId = package.Id.Name;
+
+            var pv = package.Id.Version;
+            var appVersion = $"{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}";
+
+            return $@"
+hwId : {hwId}
+hwManufacturer : {hwManufacturer} 
+hwProductName : {hwProductName} 
+osCat : {osCat} 
+osVersion : {osVersion} 
+osArchitecture : {osArchitecture} 
+appName : {appName} 
+appId : {appId} 
+pv : {pv} 
+appVersion : {appVersion} 
+            ";
         }
     }
 }
