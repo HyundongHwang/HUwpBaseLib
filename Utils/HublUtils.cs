@@ -70,12 +70,25 @@ namespace HUwpBaseLib.Utils
             Log.d($"targetNetwork : {targetNetwork.Ssid}");
             Log.d($"targetNetwork ConnectAsync ...");
 
-            var wifiResult = await firstAdapter.ConnectAsync(targetNetwork, WiFiReconnectionKind.Automatic, new PasswordCredential
-            {
-                UserName = id,
-                Password = pw,
-            });
+            PasswordCredential passwordCredential = null;
 
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                passwordCredential = new PasswordCredential
+                {
+                    Password = pw,
+                };
+            }
+            else
+            {
+                passwordCredential = new PasswordCredential
+                {
+                    UserName = id,
+                    Password = pw,
+                };
+            }
+
+            var wifiResult = await firstAdapter.ConnectAsync(targetNetwork, WiFiReconnectionKind.Automatic, passwordCredential);
             Log.d($"wifiResult.ConnectionStatus : {wifiResult.ConnectionStatus}");
 
             if (wifiResult.ConnectionStatus != WiFiConnectionStatus.Success)
