@@ -31,13 +31,30 @@ namespace HUwpBaseLib.Utils
         {
             Task.Run(async() => 
             {
-                try
+                while (true)
                 {
-                    await ConnectWifiAsync(ssidNameSubStr, id, pw);
-                }
-                catch (Exception ex)
-                {
-                    Log.e($"EX-WIFI : {ex}");
+                    try
+                    {
+                        using (var client = new HttpClient())
+                        {
+                            var strGoogle = await client.GetStringAsync(new Uri("http://google.com"));
+                        }
+
+                        await Task.Delay(3000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.e($"EX-NETWORK : {ex}");
+
+                        try
+                        {
+                            await ConnectWifiAsync(ssidNameSubStr, id, pw);
+                        }
+                        catch (Exception ex2)
+                        {
+                            Log.e($"EX-WIFI : {ex2}");
+                        }
+                    }
                 }
             });
         }
