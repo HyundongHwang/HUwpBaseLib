@@ -91,8 +91,8 @@ namespace HUwpBaseLib.Utils
             var wifiResult = await firstAdapter.ConnectAsync(targetNetwork, WiFiReconnectionKind.Automatic, passwordCredential);
             Log.d($"wifiResult.ConnectionStatus : {wifiResult.ConnectionStatus}");
 
-            if (wifiResult.ConnectionStatus != WiFiConnectionStatus.Success)
-                throw new Exception($"wifiResult.ConnectionStatus : {wifiResult.ConnectionStatus.ToString()}");
+            //if ((int)wifiResult.ConnectionStatus != (int)WiFiConnectionStatus.Success)
+            //    throw new Exception($"wifiResult.ConnectionStatus : {wifiResult.ConnectionStatus.ToString()}");
         }
 
 
