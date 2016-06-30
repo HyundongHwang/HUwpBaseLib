@@ -27,6 +27,21 @@ namespace HUwpBaseLib.Utils
 {
     public static class HublUtils
     {
+        public static void EnsureConnectWifi(string ssidNameSubStr, string id = null, string pw = null)
+        {
+            Task.Run(async() => 
+            {
+                try
+                {
+                    await ConnectWifiAsync(ssidNameSubStr, id, pw);
+                }
+                catch (Exception ex)
+                {
+                    Log.e($"EX-WIFI : {ex}");
+                }
+            });
+        }
+
         public static async Task ConnectWifiAsync(string ssidNameSubStr, string id = null, string pw = null)
         {
             Log.d($"wifi searching ...");
